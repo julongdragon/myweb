@@ -20,13 +20,27 @@ final class Routes: RouteCollection {
         builder.get("info") { req in
             return req.description
         }
+        // CRUD
+        
+        builder.get("read") { req in
+            let read = try Product.all()
+            //return try read.makeJSON()
+            
+            let find = try Product.find(3)
+            try find?.delete()
+            //find?.item = "PS20"
+            //try find?.save()
+            //return try find!.makeJSON()
+            return try read.makeJSON()
+        }
+       
         
         builder.post("item","price"){ (req) -> ResponseRepresentable in
             guard let item = req.data["item"]?.string,
                 let price = req.data["price"]?.string else {
                     throw Abort.badRequest
             }
-            let product = Student(item: item, price: price)
+            let product = Product(item: item, price: price)
             try product.save()
             return try product.makeJSON()
         }
